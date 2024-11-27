@@ -56,8 +56,6 @@ export default function Home() {
                 },
             });
 
-            console.log(response, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
-
         } catch (error) {
             console.error("Erro ao adicionar produto ao carrinho!", error);
         }

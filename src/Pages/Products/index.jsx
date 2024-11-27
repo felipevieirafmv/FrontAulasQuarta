@@ -12,7 +12,7 @@ export default function Products() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0.0);
     const [quantity, setQuantity] = useState(0);
-    const [productId, setProductId] = useState(null);
+    const [productId, setProductId] = useState(0);
     
     async function handleSubmit(e) {
 
