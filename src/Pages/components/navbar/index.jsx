@@ -8,7 +8,7 @@ export default function NavBar(){
     return(
         <Navbar bg="dark" data-bs-theme="dark" className={styles.navBar}>
             <Container>
-                <Navbar.Brand href="/home">Navbar</Navbar.Brand>
+                <Navbar.Brand href="/home">Store</Navbar.Brand>
                 <Nav className="me-auto">
                     <Nav.Link href="/home">Home</Nav.Link>
                     <Nav.Link href="/products">Produtos</Nav.Link>

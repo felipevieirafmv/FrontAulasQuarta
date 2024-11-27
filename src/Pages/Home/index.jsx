@@ -31,22 +31,55 @@ export default function Home() {
         fetchProducts();
     }, []);
 
+    const handleAddToCart = async (productId) => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.log("Token não encontrado.");
+            return;
+        }
+
+        try {
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            const userId = decodedToken.id;
+
+            const cartItem = {
+                userId: userId,
+                productId: productId,
+                quantity: 1
+            };
+
+            const response = await api.post('/cart/add', cartItem, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            console.log(response, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+
+        } catch (error) {
+            console.error("Erro ao adicionar produto ao carrinho!", error);
+        }
+    };
+
     return (
         <div  style={{ overflow: 'hidden' }}>
             <NavBar />
             <div className={styles.homePage}>
                 {products.map(product => (
-                    <Card className={styles.card}>
-                        <Card.Header>Produtos</Card.Header>
+                    <Card key={product.id} className={styles.card}>
                         <Card.Body>
-                            <Card key={product.id} className="m-2">
-                                <Card.Body>
-                                    <Card.Title>{product.name}</Card.Title>
-                                    <Card.Text>{product.description}</Card.Text>
-                                    <Card.Text><strong>Preço:</strong> R${product.price.toFixed(2)}</Card.Text>
-                                    <Card.Text><strong>Quantidade:</strong> {product.quantity}</Card.Text>
-                                </Card.Body>
-                            </Card>
+                            <Card.Title>{product.name}</Card.Title>
+                            <Card.Text>{product.description}</Card.Text>
+                            <Card.Text><strong>Preço:</strong> R${product.price.toFixed(2)}</Card.Text>
+                            <Card.Text><strong>Quantidade:</strong> {product.quantity}</Card.Text>
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => handleAddToCart(product.id)}
+                            >
+                                Adicionar ao Carrinho
+                            </button>
                         </Card.Body>
                     </Card>
                 ))}

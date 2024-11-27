@@ -12,6 +12,7 @@ export default function Products() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0.0);
     const [quantity, setQuantity] = useState(0);
+    const [productId, setProductId] = useState(null);
     
     async function handleSubmit(e) {
 
@@ -24,15 +25,38 @@ export default function Products() {
                 return;
             }
 
-            const response = await api.post('/products', product, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                }
-            });
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            };
+
+            if (productId) {
+                const response = await api.put(`products?id=${productId}`, product, { headers });
+            } else {
+                const response = await api.post('/products', product, { headers });
+            }
 
         } catch (error) {
             console.error('Erro ao cadastrar produto!');
+        }
+    }
+
+    async function deleteSubmit(e){
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                console.log("Token não encontrado.");
+                return;
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            };
+            const response = await api.delete(`products?id=${productId}`, { headers });
+        } catch (error) {
+            console.error('Erro ao deletar produto!');
         }
     }
 
@@ -81,7 +105,7 @@ export default function Products() {
                             />
                             
                             <Button variant="primary" type="submit" className={styles.button}>
-                                Register
+                                Create
                             </Button>
                         </Form>
                     </Card.Body>
@@ -91,6 +115,15 @@ export default function Products() {
                     <Card.Header>Update Product</Card.Header>
                     <Card.Body>
                         <Form onSubmit={handleSubmit}>
+                            <Form.Label>Id</Form.Label>
+                            <Form.Control
+                                className={styles.input}
+                                value={productId}
+                                type="number"
+                                placeholder="Id"
+                                onChange={(e) => setProductId(e.target.value)}
+                            />
+
                             <Form.Label>Nome</Form.Label>
                             <Form.Control
                                 className={styles.input}
@@ -128,7 +161,27 @@ export default function Products() {
                             />
                             
                             <Button variant="primary" type="submit" className={styles.button}>
-                                Register
+                                Update
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
+
+                <Card className="text-center">
+                    <Card.Header>Delete Product</Card.Header>
+                    <Card.Body>
+                        <Form onSubmit={deleteSubmit}>
+                            <Form.Label>Id</Form.Label>
+                            <Form.Control
+                                className={styles.input}
+                                value={productId}
+                                type="number"
+                                placeholder="Id"
+                                onChange={(e) => setProductId(e.target.value)}
+                            />
+
+                            <Button variant="primary" type="submit" className={styles.button}>
+                                Delete
                             </Button>
                         </Form>
                     </Card.Body>
