@@ -13,6 +13,7 @@ export default function NavBar(){
                     <Nav.Link href="/home">Home</Nav.Link>
                     <Nav.Link href="/products">Produtos</Nav.Link>
                     <Nav.Link href="/cart">Carrinho</Nav.Link>
+                    <Nav.Link href="/payment">Pagamento</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>

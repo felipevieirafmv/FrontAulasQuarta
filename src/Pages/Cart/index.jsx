@@ -3,10 +3,12 @@ import Card from 'react-bootstrap/Card';
 import { api } from '../../Services/api';
 import styles from './styles.module.scss';
 import NavBar from "../components/navbar";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
     const [cart, setCart] = useState([]);
     const [cartId, setCartId] = useState(0);
+    const navigate = useNavigate();
 
     async function fetchCart() {
         const token = localStorage.getItem("token");
@@ -61,6 +63,53 @@ export default function Cart() {
         }
     };
 
+    async function handlePayPix(){
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                console.log("Token não encontrado.");
+                return;
+            }
+
+            const response = await api.post("/payment/pix", { "userId": cartId }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+
+            localStorage.setItem("paymentId", response.data.id);
+            navigate("/payment");
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function handlePayCredit(){
+        try {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                console.log("Token não encontrado.");
+                return;
+            }
+
+            const response = await api.post("/payment/credit-card", { "userId": cartId }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
+
+            localStorage.setItem("paymentId", response.data.id);
+            navigate("/payment");
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <>
@@ -81,6 +130,18 @@ export default function Cart() {
                             </div>
                         ))}
                     </Card.Body>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handlePayPix()}
+                    >
+                        Pagar por pix
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handlePayCredit()}
+                    >
+                        Pagar por cartão
+                    </button>
                 </Card>
             </div>
         </>
